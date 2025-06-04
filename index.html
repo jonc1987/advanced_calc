@@ -1,1 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Calculator with Conversions</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f2f2f2; }
+        h1 { text-align: center; }
+        .container { display: flex; flex-direction: column; align-items: center; }
+        .box { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: 20px; width: 90%; max-width: 500px; }
+        input[type="text"], input[type="number"], select { width: calc(100% - 20px); padding: 8px; margin-bottom: 10px; font-size: 1rem; }
+        button { padding: 10px 20px; margin: 5px; font-size: 1rem; cursor: pointer; }
+        .output { margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Advanced Calculator with Conversions</h1>
+    <div class="container">
+        <div class="box">
+            <h2>Calculator</h2>
+            <input type="text" id="calc-input" placeholder="Enter expression e.g. sin(45) + 2^3" />
+            <button onclick="evaluateExpression()">Evaluate</button>
+            <button onclick="document.getElementById('calc-input').value=''">Clear</button>
+            <div id="calc-result" class="output"></div>
+        </div>
+        <div class="box">
+            <h2>Conversions</h2>
+            <select id="conv-type">
+                <option value="c2f">Celsius → Fahrenheit</option>
+                <option value="f2c">Fahrenheit → Celsius</option>
+                <option value="km2mi">Kilometers → Miles</option>
+                <option value="mi2km">Miles → Kilometers</option>
+                <option value="dec2bin">Decimal → Binary</option>
+                <option value="bin2dec">Binary → Decimal</option>
+            </select>
+            <input type="number" id="conv-value" placeholder="Enter value" />
+            <button onclick="performConversion()">Convert</button>
+            <div id="conv-result" class="output"></div>
+        </div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@11.11.0/lib/browser/math.js"></script>
+    <script>
+        function evaluateExpression() {
+            const input = document.getElementById('calc-input').value;
+            const out = document.getElementById('calc-result');
+            if (!input) {
+                out.textContent = 'Please enter an expression.';
+                return;
+            }
+            try {
+                const result = math.evaluate(input);
+                out.textContent = `Result: ${result}`;
+            } catch (err) {
+                out.textContent = 'Error in expression';
+            }
+        }
+
+        function performConversion() {
+            const type = document.getElementById('conv-type').value;
+            const valueField = document.getElementById('conv-value');
+            const out = document.getElementById('conv-result');
+            if (valueField.value === '') {
+                out.textContent = 'Enter a value to convert.';
+                return;
+            }
+            const num = parseFloat(valueField.value);
+            let result;
+            switch (type) {
+                case 'c2f':
+                    result = num * 9/5 + 32;
+                    break;
+                case 'f2c':
+                    result = (num - 32) * 5/9;
+                    break;
+                case 'km2mi':
+                    result = num / 1.60934;
+                    break;
+                case 'mi2km':
+                    result = num * 1.60934;
+                    break;
+                case 'dec2bin':
+                    result = parseInt(num, 10).toString(2);
+                    break;
+                case 'bin2dec':
+                    result = parseInt(valueField.value, 2);
+                    break;
+                default:
+                    result = 'Invalid conversion';
+            }
+            out.textContent = `Result: ${result}`;
+        }
+    </script>
+</body>
+</html>
